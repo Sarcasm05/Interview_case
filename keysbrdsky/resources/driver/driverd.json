@@ -1,0 +1,9 @@
+{
+  "NameCar" : "mazda",
+  "onebenz" : 9,
+  "money" : 122,
+  "viewbenz" : 2,
+  "PathLength" : { "02" :  0.5, "03":  2},
+  "Wish" : 3,
+  "Coord" : { "x" :  2, "y":  21}
+}
