@@ -9,4 +9,4 @@ def main():
     for module in __all__:
         exec("import {}".format(module))
 
-main()
+#main()

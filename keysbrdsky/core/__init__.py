@@ -1,4 +1,4 @@
-__all__ = ['graph']
+__all__ = ['graph','adoptbranch']
 
 __version__ = '0.1'
 __license__ = 'GPLv3'
@@ -9,4 +9,3 @@ def main():
     for module in __all__:
         exec("import {}".format(module))
 
-main()

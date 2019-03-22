@@ -5,14 +5,36 @@ def main():
     """
     Run the keysbrdsky setup script
     """
+    import os
+    import sys
 
     parser = argparse.ArgumentParser(description='install depends and compile test')
     parser.add_argument('-r', '--path',  default='requirements.txt',type=str)
     parser.add_argument('-b', '--builder',type=str,help='mode of build')
-    args = parser.parse_args()
+    #parser.add_argument('-r', '--requirements', help='path file depends')
 
-    import os
-    import sys
+    args = parser.parse_args()
+    if args.builder is not None:
+        from builder import template
+
+
+        if  'mysqldb' in args.builder:
+            template.Executor.compile_test_mysql_client()
+            template.Executor.compile_test_mysql_serv()
+        elif  'json' in args.builder:
+            template.Executor.compile_test_json()
+        elif 'sqlite' in args.builder:
+            template.Executor.compile_test_sqlite()
+
+        sys.argv = list(filter(lambda val: val not in args.builder and val not in '--builder', sys.argv))
+
+
+        if args.path is None:
+            sys.exit(0)
+
+
+
+
     import urllib.request
     import getpass
     import subprocess
@@ -28,6 +50,7 @@ def main():
             exec(urllib.request.urlopen("https://bootstrap.pypa.io/get-pip.py").read(), globals())
         except Exception as e:
             print("Error installing pip: {}".format(str(e)))
+
 
         os.execv(sys.executable, ['python'] + [os.path.abspath(sys.argv[0])] + sys.argv[1:])
 
@@ -54,17 +77,7 @@ def main():
             locals()['pip_install_%d' % x].wait()
 
 
-    if args.builder:
-        from keysbrdsky.builder import template
-        runner = template.Executor(args.path,args.persist, args.mode)
 
-        if  'mysqldb' in args.builder:
-            runner.compile_test_mysql_client()
-            runner.compile_test_mysql_serv()
-        elif  'json' in args.builder:
-            runner.compile_test_json()
-        elif 'sqlite' in args.builder:
-            runner.compile_test_sqlite()
 
 
 if __name__ == '__main__':

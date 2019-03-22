@@ -1,17 +1,29 @@
-from collections import namedtuple
-from collections import deque, namedtuple
+from collections import deque
 
-from keysbrdsky.package.vertex import Vertex
+import hashlib
+import package.vertex as vertex
+Vertex = vertex.Vertex
 
+#вот это вынеси в отдельный файл, чтооб он был в модуле core
+class BaseEdge(Vertex):
+
+    def __new__(cls,start,end,cost):
+        self = super(BaseEdge, cls).__new__(cls, start, end, cost)
+        return self
+    def get_start(self):
+        return self.start
+    def get_end(self):
+        return self.end
+    def get_cost(self):
+        return self.cost
 
 inf = float('inf')
-
 class Graph():
     def __init__(self, edges):
 
-        if len(edges) != 3:
-            raise ValueError('Wrong edges data: {}'.format(edges))
-        self.edges = [Vertex(edge[0], edge[1], edge[2]) for edge in edges]
+        #if len(edges) != 3:
+        #    raise ValueError('Wrong edges data: {}'.format(edges))
+        self.edges = [BaseEdge(edge[0], edge[1], edge[2]) for edge in edges]
 
 
     @property
@@ -38,9 +50,9 @@ class Graph():
             if [edge.get_start(), edge.get_end()] in node_pairs:
                 return ValueError('Edge {} {} already exists'.format(n1, n2))
 
-        self.edges.append(Vertex(start=n1, end=n2, cost=cost))
+        self.edges.append(BaseEdge(start=n1, end=n2, cost=cost))
         if both_ends:
-            self.edges.append(Vertex(start=n2, end=n1, cost=cost))
+            self.edges.append(BaseEdge(start=n2, end=n1, cost=cost))
 
     @property
     def neighbours(self):
@@ -51,6 +63,7 @@ class Graph():
         return neighbours
 
     def dijkstra(self, source, dest):
+        print(self.vertices)
         distances = {vertex: inf for vertex in self.vertices}
         previous_vertices = {
             vertex: None for vertex in self.vertices
@@ -67,15 +80,19 @@ class Graph():
             for neighbour, cost in self.neighbours[current_vertex]:
                 alternative_route = distances[current_vertex] + cost
                 if alternative_route < distances[neighbour]:
-                    distances[neighbour] = alternative_route, previous_vertices[neighbour] = current_vertex
+                    distances[neighbour] = alternative_route
+                    previous_vertices[neighbour] = current_vertex
 
-        path, current_vertex = deque(), dest
+        path, current_vertex, arr_p = deque(), dest, list()
         while previous_vertices[current_vertex] is not None:
             path.appendleft(current_vertex)
+            print(path)
+            #print(distances[current_vertex])
+            arr_p.append(distances[current_vertex])
             current_vertex = previous_vertices[current_vertex]
         if path:
             path.appendleft(current_vertex)
-        return path
+        return (path, arr_p)
 
 
 def test():
@@ -84,8 +101,4 @@ def test():
         Vertex("b", "d", 15), Vertex("c", "d", 11), Vertex("c", "f", 2),  Vertex("d", "e", 6),
         Vertex("e", "f", 9)])
 
-    print(graph.dijkstra('a', 'e'))
-
-
-if __name__ == "__main__":
-    test()
+    return graph.dijkstra('84312883a7fcbf9d9e6d180df58ba912745084e7', 'ac7236c78e55892a3de2cba496963bd3c7656a5f')

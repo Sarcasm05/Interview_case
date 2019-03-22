@@ -1,39 +1,20 @@
-from keysbrdsky.package.vertex import Vertex
-from keysbrdsky.module.prices import BasePrices
-from keysbrdsky.core.graph import Graph
+from utils import  parser_argument_cmdline
+import core.graph as graph
 
+import sys
+class BaseStatistics():
+    def __init__(self,BasePrices, BaseDriver):
+        self.baseprice = BasePrices
+        self.basedriver = BaseDriver
 
-import json
-import argparse
-
-
-def pars_req_json(mapjson):
-
-
+        #не присобачил это, и еще  бд
 
 
 def main():
-    parser = argparse.ArgumentParser(description='This is finder of min path for drivers')
-    parser.add_argument('-s', '--sity', description='json file of coordinates gaseline in city', default='resources/driver/driverd.json')
-    parser.add_argument('-d', '--drivers', description='json file of coordinates and characteristics driver')
-    parser.add_argument('-m', '--mode', description='use MySQLdb for testing || json || sqllite3')
-    args = parser.parse_args()
+    all_vert = parser_argument_cmdline(sys.argv)
+    base = graph.Graph(all_vert)
 
+    print(base.dijkstra('driver', 'e'))
 
-
-
-
-
-
-#создаем бд, выгружаем город. Подрузомеваем, что потом, нам нужно будет реализовать свой веб сервер и клиент
-#Базу данных берем MysSQLDB,для обеспечения параллельных к ней запросов.
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    main()

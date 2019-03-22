@@ -1,4 +1,4 @@
-__all__ = ['gasedge', 'prices']
+__all__ = ['prices', 'driver']
 
 __version__ = '0.1'
 __license__ = 'GPLv3'
@@ -10,3 +10,4 @@ def main():
         exec("import {}".format(module))
 
 
+#main()
