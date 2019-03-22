@@ -1,6 +1,7 @@
 import argparse
+import ssl
 
-
+ssl._create_default_https_context = ssl._create_unverified_context
 def main():
     """
     Run the keysbrdsky setup script
@@ -10,12 +11,12 @@ def main():
 
     parser = argparse.ArgumentParser(description='install depends and compile test')
     parser.add_argument('-r', '--path',  default='requirements.txt',type=str)
-    parser.add_argument('-b', '--builder',type=str,help='mode of build')
+    parser.add_argument('-b', '--builder',type=str, help='mode of build')
     #parser.add_argument('-r', '--requirements', help='path file depends')
 
     args = parser.parse_args()
     if args.builder is not None:
-        from builder import template
+        from keysbrdsky.builder import template
 
 
         if  'mysqldb' in args.builder:
