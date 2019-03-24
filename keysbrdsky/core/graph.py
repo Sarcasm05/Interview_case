@@ -4,7 +4,6 @@ import hashlib
 import package.vertex as vertex
 Vertex = vertex.Vertex
 
-#вот это вынеси в отдельный файл, чтооб он был в модуле core
 class BaseEdge(Vertex):
 
     def __new__(cls,start,end,cost):
